@@ -35,5 +35,20 @@ services:
       db:
         condition: service_healthy
         restart: true
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+    ports:
+      - 8082:80
+    volumes:
+      - /sessions
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
 volumes:
   data:
