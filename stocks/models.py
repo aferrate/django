@@ -1,5 +1,5 @@
 from django.db import models
 
-class Requests(models.Model):
+class Call(models.Model):
     name_company = models.CharField(max_length=255)
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)

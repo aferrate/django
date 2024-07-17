@@ -1,6 +1,7 @@
 from django.shortcuts import render        
 from django.http import HttpResponse
 from datetime import datetime
+from stocks.models import Call
 import yfinance as yf
 import pandas as pd
         
@@ -25,8 +26,10 @@ def get_stock(request, name, date_start, date_end):
     df_list = []
     df_list.append(data)
     df = pd.concat(df_list)
-    df.to_csv('list.csv')
-    #df.to_csv('list.csv', mode='a', header=False)
+    df.to_csv('list.csv', mode='a', header=False)
+
+    call = Call(name_company=name)
+    call.save()
 
     return HttpResponse('ok')
 
