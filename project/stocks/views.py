@@ -26,6 +26,7 @@ def get_stock(request, name, date_start, date_end):
     df_list.append(data)
     df = pd.concat(df_list)
     df.to_csv('list.csv')
+    #df.to_csv('list.csv', mode='a', header=False)
 
     return HttpResponse('ok')
 
