@@ -18,7 +18,7 @@ def get_stock(request, name, date_start, date_end):
     except ValueError:
         return HttpResponse('date end bad format, format must be YYYY-MM-DD')
 
-    data = yf.download(name,'2016-01-01','2016-08-01')['Adj Close']
+    data = yf.download(name,date_start,date_end)['Adj Close']
 
     if len(data) == 0:
         return HttpResponse('error downloading data')
@@ -26,6 +26,8 @@ def get_stock(request, name, date_start, date_end):
     df_list = []
     df_list.append(data)
     df = pd.concat(df_list)
+    df.drop_duplicates()
+
     df.to_csv('list.csv', mode='a', header=False)
 
     call = Call(name_company=name)
@@ -34,4 +36,4 @@ def get_stock(request, name, date_start, date_end):
     return HttpResponse('ok')
 
 def index(request):
-    return HttpResponse('<p><a href="/admin">admin</a></p><p><a href="/getstock/AAPL/2020-01-01/2020-02-01">stocks</a></p>')
+    return HttpResponse('<p><a href="/admin">admin</a></p><p><a href="/getstock/AAPL/2024-07-10/2024-07-11">stocks</a></p>')
