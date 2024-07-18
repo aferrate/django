@@ -5,20 +5,28 @@ from stocks.models import Call
 import yfinance as yf
 import pandas as pd
         
-def get_stock(request, name, date_start, date_end):
+def get_stock(request, name, date_start_str, date_end_str):
     format = '%Y-%m-%d'
 
     try:
-        datetime.strptime(date_start, format)
+        date_start = datetime.strptime(date_start_str, format)
     except ValueError:
         return HttpResponse('date start bad format, format must be YYYY-MM-DD')
 
     try:
-        datetime.strptime(date_end, format)
+        date_end = datetime.strptime(date_end_str, format)
     except ValueError:
         return HttpResponse('date end bad format, format must be YYYY-MM-DD')
 
-    data = yf.download(name,date_start,date_end)['Adj Close']
+    if date_start > date_end:
+        return HttpResponse('start date cannot be greater than end date')
+
+    today = datetime.today().date()
+
+    if date_start > today or date_end > today:
+        return HttpResponse('dates cannot be greater than today')
+
+    data = yf.download(name, date_start_str, date_end_str)['Adj Close']
 
     if len(data) == 0:
         return HttpResponse('error downloading data')
