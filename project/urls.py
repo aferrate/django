@@ -20,6 +20,6 @@ from stocks import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("getstock/<str:name>/<str:date_start>/<str:date_end>", views.get_stock),
+    path("getstock/<str:name>/<str:date_start_str>/<str:date_end_str>", views.get_stock),
     path('', views.index),
 ]
