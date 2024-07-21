@@ -26,20 +26,21 @@ def get_stock(request, name, date_start_str, date_end_str):
     if date_start.date() > today or date_end.date() > today:
         return HttpResponse('dates cannot be greater than today')
 
-    data = yf.download(name, date_start_str, date_end_str)['Adj Close']
+    data = yf.download(name, date_start_str, date_end_str)
 
     if len(data) == 0:
         return HttpResponse('error downloading data')
 
-    df_data = pd.DataFrame(data)
-    print(df_data)
+    df_list = []
+    data['Name'] = name
+
+    df_list.append(data)
 
     df_csv = pd.read_csv('list.csv')
 
-    df_csv = pd.concat([df_csv, df_data])
-    df_csv.drop_duplicates()
+    df_csv = pd.concat(df_list)
 
-    df_csv.to_csv('list.csv', mode='a', header=False)
+    df_csv.to_csv('list.csv', mode = 'a', header = False)
 
     call = Call(name_company=name)
     call.save()
