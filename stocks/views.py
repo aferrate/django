@@ -36,12 +36,18 @@ def get_stock(request, name, date_start_str, date_end_str):
 
     df_csv = pd.read_csv('list.csv')
 
-    #df_csv = pd.concat([df_csv, data], ignore_index = True)
+    df_csv['Date'] = df_csv['Date'].astype(str) 
+    df_csv['Name'] = df_csv['Name'].astype(str)
+    data['Date'] = data['Date'].astype(str)
+    data['Name'] = data['Name'].astype(str)
 
-    #print(data)
-    #print(df_csv)
+    data_filtered = pd.DataFrame(columns=['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume', 'Name'])
 
-    data.to_csv('list.csv', mode = 'a', header = False, index = False)
+    for index, row in data.iterrows():
+        if len(df_csv.loc[(df_csv['Name'] == row['Name']) & (df_csv['Date'] == row['Date'])]) == 0:
+            data_filtered.loc[len(data_filtered.index)] = row
+
+    data_filtered.to_csv('list.csv', mode = 'a', header = False, index = False)
 
     call = Call(name_company = name)
     call.save()
