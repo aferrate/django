@@ -31,18 +31,19 @@ def get_stock(request, name, date_start_str, date_end_str):
     if len(data) == 0:
         return HttpResponse('error downloading data')
 
-    df_list = []
+    data = data.reset_index()
     data['Name'] = name
-
-    df_list.append(data)
 
     df_csv = pd.read_csv('list.csv')
 
-    df_csv = pd.concat(df_list)
+    #df_csv = pd.concat([df_csv, data], ignore_index = True)
 
-    df_csv.to_csv('list.csv', mode = 'a', header = False)
+    #print(data)
+    #print(df_csv)
 
-    call = Call(name_company=name)
+    data.to_csv('list.csv', mode = 'a', header = False, index = False)
+
+    call = Call(name_company = name)
     call.save()
 
     return HttpResponse('ok')
